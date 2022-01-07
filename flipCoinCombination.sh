@@ -1,28 +1,51 @@
-#! /bin/bash -x
+echo "Welcome to flip coin combination"
+
 declare -A flipCoin
-ishead=1
+IS_HEAD=1
 counter=0
 headCount=0
 tailCount=0
-read -p " How many times to flip : " noofTime
-while [ $counter -lt $noofTime ]
-do
-	flip=$(($RANDOM%2))
-	echo $flip
-	if [ $flip -eq $ishead ]
-	then
-		echo " Head "
-		flipCoin[$counter]="Head"
-		((headCount++))
-	else
-		echo " Tail "
-		flipCoin[$counter]="Tail"
-		((tailCount++))
-	fi
-	((counter++))
-done
-percentageHeads=$(((($headCount)*100)/$noofTime))
-echo "percentage pf heads " $percentageHeads
-percentageTails=$((100-$percentageHeads))
-echo "percentge of tails " $percentageTails
 
+read -p "How many times you want to flip coin " noOfTime
+
+read -p "How many coins you want to flip at same time " noOfCoin
+
+function flipCoinFunction(){
+
+	flipCoinResult=$((RANDOM%2))
+	#echo $flipCoinResult
+
+	if [ $flipCoinResult -eq $IS_HEAD ]
+	then
+		echo "H"
+	else
+		echo "T"
+	fi
+
+}
+
+while [ $counter -lt $noOfTime ]
+do
+	noOfCoinFlip=0
+	while [ $noOfCoinFlip -lt $noOfCoin ] 
+	do
+		returnValueFromFunction=`flipCoinFunction`
+		flipCoin[$counter]=`echo ${flipCoin[$counter]}$returnValueFromFunction`
+		if [ ${flipCoin[$counter]} == 'HH' ]
+		then
+			((headCount++))
+		else
+			((tailCount++))
+		fi
+		((noOfCoinFlip++))
+	done
+	((counter++))
+done 
+
+#Percentage of  head
+percnetageOfHead=$(((($headCount)*100)/$noOfTime))
+echo "Percentage of head " $percnetageOfHead
+
+#Percentage of tail
+percentageofTail=$((100-$percnetageOfHead))
+echo "Percentage of tail "$percentageofTail
